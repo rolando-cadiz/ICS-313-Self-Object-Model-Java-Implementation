@@ -88,3 +88,36 @@ Here we take in some object and a string as parameters. The goal is to send the 
             }
             return null;
     }
+
+## sendAMessageWithParameters
+The idea here is very similar to the previous method. We still take in an object and a string message; however, this time we are attaching another object to this message, which will contain a parameter. We do the same steps as before, finding the message key in one of the slots via BFS. If found, we attach our parameter object to the message and return the newly evaluated object.
+
+        public Object sendAMessageWithParameters(AnObject obj, String message, AnObject parameter) {
+                Queue<AnObject> queue = new LinkedList<>();
+                Set<AnObject> visited = new java.util.HashSet<>();
+                queue.add(obj);
+        
+                while (!queue.isEmpty()) {
+                    AnObject current = queue.poll();
+                    if (visited.contains(current)) {
+                        continue;
+                    }
+                    visited.add(current);
+        
+                    if (current.slots.containsKey(message)) {
+                        AnObject object = current.slots.get(message);
+                        if(object != null){
+                            obj.slots.put("parameter", parameter); //Where we attach the parameter object to the message
+                            return evaluate(object);
+                        }
+                    for (String someParent : current.parents) {
+                        AnObject parent = current.slots.get(someParent);
+                        if (parent != null) {
+                            queue.add(parent);
+                        }
+                    }   
+                    }
+                }
+                return null;
+            }
+
