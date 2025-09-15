@@ -209,4 +209,11 @@ This will be how we build the string representation of any object: Header -> slo
             }
         - prints the list of messages in chronological order
 
+### Example output:
+AnObject@50695629 {
+slots:
+    ^AnObject2 -> Object@10293847
+    AnObject3 -> Object@56473829
+  messages: [inc, inc, value]
+}
 
