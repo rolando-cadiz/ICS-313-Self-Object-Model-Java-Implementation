@@ -156,6 +156,8 @@ Returns the object as a string representation using an overridden toString() met
             }
     
 ## toString
+This will be how we build the string representation of any object: Header -> slots (if any) -> messages (if any)
+
             @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
@@ -180,7 +182,6 @@ Returns the object as a string representation using an overridden toString() met
         
         }
         
-This will be how we build the string representation of any object: Header -> slots (if any) -> messages (if any)
  ### Header: 
         sb.append("Object@").append(System.identityHashCode(this)).append(" {");
         - Shows the object id as "Object@<some number>" 
