@@ -121,3 +121,82 @@ The idea here is very similar to the previous method. We still take in an object
                 return null;
             }
 
+## assignSlot
+This method is simple but essential to the structure of how the SOM works. As objects need to be able to reference each other, we can do this by assigning an object to another object's slot. We take two objects and a string as parameters here. obj1 is the assigning object that will contain the reference to obj2, the assignee. 
+
+        public void assignSlot(AnObject obj, String objectName, AnObject obj2) {
+                obj.slots.put(objectName, obj2);
+            }
+
+## makeParent
+Another integral feature of the SOM is letting objects refer directly to a parent. This is what the parents list structure we defined earlier is for. We first check if the object (objName) we want to define as a parent is referenced inside some object that is to be the child (obj). If it is, we can add that object to the parents list to keep it tracked as a parent.
+
+        public void makeParent(AnObject obj,String objName) {
+                if (obj.slots.containsKey(objName)) {
+                        obj.parents.add(objName);
+                }
+                else {
+                    throw new IllegalArgumentException("No such slot to make parent: " + objName);
+                }
+            }
+
+## assignParentSlot
+Here, we combine assignSlot() and makeParent() to create a slot in our first object for a new second object, and then we make that new object the parent of our first object.
+
+        public void assignParentSlot(AnObject obj, String objName, AnObject obj2){
+                assignSlot(obj, objName, obj2);
+                makeParent(obj, objName);
+            }
+
+## print
+Returns the object as a string representation using an overridden toString() method
+
+        public String print(AnObject obj) {
+                return obj.toString();
+            }
+    
+## toString
+This will be how we build the string representation of any object: Header -> slots (if any) -> messages (if any)
+ ### Header: 
+        sb.append("Object@").append(System.identityHashCode(this)).append(" {");
+        - Shows the object id as "Object@<some number>" 
+        - System.identityHashCode(this) is the identity hash and not the memory address of the object
+
+### slots: 
+
+            if (!slots.isEmpty()) {
+                sb.append("\n  slots:");
+                for (Map.Entry<String, AnObject> e : slots.entrySet()) {
+                    String name = e.getKey();
+                    AnObject ref = e.getValue();
+                    boolean isParent = parents.contains(name);
+                    sb.append("\n    ").append(isParent ? "^" : "").append(name)
+                      .append(" -> Object@").append(System.identityHashCode(ref));
+                }
+            }
+
+
+        
+            @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Object@").append(System.identityHashCode(this)).append(" {");
+        
+            if (!slots.isEmpty()) {
+                sb.append("\n  slots:");
+                for (Map.Entry<String, AnObject> e : slots.entrySet()) {
+                    String name = e.getKey();
+                    AnObject ref = e.getValue();
+                    boolean isParent = parents.contains(name);
+                    sb.append("\n    ").append(isParent ? "^" : "").append(name)
+                      .append(" -> Object@").append(System.identityHashCode(ref));
+                }
+            }
+            if (!messages.isEmpty()) {
+                sb.append("\n  messages: ").append(messages);
+            }
+            sb.append("\n}");
+            return sb.toString();
+        }
+        
+        }
