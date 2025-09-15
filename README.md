@@ -53,8 +53,38 @@ We want to be able to evaluate our objects, and this method does exactly that. W
                     AnObject copy = copy(obj);
                     Object result = null;
                     for (String s : new ArrayList<>(copy.messages)) {
-                        result = sendAMessage(copy, s);
+                        result = sendAMessage(copy, s); //method shown below
                     }
                     return result;
                 }
             }
+
+## sendAMessage
+Here we take in some object and a string as parameters. The goal is to send the string message to the object. As each object contains slots, we want to check all of them to find if any of them contains the message as a key. If this message is not found in the original object's slots, we continue the pattern of checking the next level (all parents' slots, then grandparents' slots, etc.). This can be done via a Breadth-First-Search using a queue while managing our visited objects via a set. Once we have found our slot containing the message key, we return the evaluated object. Otherwise, we return a null value to indicate no message key was found.
+
+        public Object sendAMessage(AnObject obj, String message) {
+            Queue<AnObject> queue = new LinkedList<>();
+            Set<AnObject> visited = new java.util.HashSet<>();
+            queue.add(obj);
+
+            while (!queue.isEmpty()) {
+                AnObject current = queue.poll();
+                if (visited.contains(current)) {
+                    continue;
+                }
+                visited.add(current);
+
+                if (current.slots.containsKey(message)) {
+                    AnObject object = current.slots.get(message);
+                    return evaluate(object);
+                }
+
+                for (String someParent : current.parents) {
+                    AnObject parent = current.slots.get(someParent);
+                    if (parent != null) {
+                        queue.add(parent);
+                    }
+                }
+            }
+            return null;
+    }
