@@ -5,6 +5,21 @@ This is a (crude) Java implementation of the Self Object Model (SOM) for my ICS 
 # Why Java?
 Java was the first language I ever learned, and so I am very comfortable writing Java code. Although it can be a very verbose language, I believe the additional details can help readers understand what exactly is going on. In regards to the technical reason for writing in Java, I prefer the object-oriented programming model as it allows for easy object creation, specification, and manipulation.
 
+# Importance of Parent Relationships Between Objects With Lists of Messages and Their Copies
+When you “call” a function object, you first make a copy and run the body’s messages on that copy. The copy should keep the same parent links as the function, so any names it looks up resolve exactly like they did where the function was written.
+### Why It Matters
+This matters because it keeps behavior predictable. With parents, the function behaves the same no matter who calls it. The alternative could be passing messages in a parameter slot with set instructions.
+
+# Implementing Flow Control
+## if-else
+An if-else statement can be implemented by passing primitive Boolean values as a sort of conditional check. We can branch down into a specific "if" or "else" conditional this way when certain criteria are met. This branching can be achieved by object references.
+
+## Recursion
+Recursion works by giving the function object a slot that points back to itself. Inside the body, you send a message (with a new argument) to call the function again. Each call creates a fresh copy and continues down the "recursion tree" of calls.
+
+## Loops
+We can simulate loops using more primitives on a "conditional" object and a "body" object. We can evaluate the "conditional" object and run the "body" object when the conditional is met. 
+
 # The AnObject Class
 In the SOM, an object is defined as a collection of slots where each slot contains a string name and a reference to another object. Objects in SOM are capable of sending messages to either themselves or another object as a way to communicate instructions to each other. Like nodes in a tree data structure, objects also have parents that they may refer to (useful for modeling recursion).
 
@@ -216,18 +231,3 @@ This will be how we build the string representation of any object: Header -> slo
             AnObject3 -> Object@56473829
           messages: [inc, inc, value]
         }
-
-# Importance of Parent Relationships Between Objects With Lists of Messages and Their Copies
-When you “call” a function object, you first make a copy and run the body’s messages on that copy. The copy should keep the same parent links as the function, so any names it looks up resolve exactly like they did where the function was written.
-### Why It Matters
-This matters because it keeps behavior predictable. With parents, the function behaves the same no matter who calls it. The alternative could be passing messages in a parameter slot with set instructions.
-
-# Implementing Flow Control
-## if-else
-An if-else statement can be implemented by passing primitive Boolean values as a sort of conditional check. We can branch down into a specific "if" or "else" conditional this way when certain criteria are met. This branching can be achieved by object references.
-
-## Recursion
-Recursion works by giving the function object a slot that points back to itself. Inside the body, you send a message (with a new argument) to call the function again. Each call creates a fresh copy and continues down the "recursion tree" of calls.
-
-## Loops
-We can simulate loops using more primitives on a "conditional" object and a "body" object. We can evaluate the "conditional" object and run the "body" object when the conditional is met. 
