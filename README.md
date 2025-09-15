@@ -26,7 +26,7 @@ The last two private variable fields:
 primitiveValue - stores immutable data; evaluate returns a copy with the same value. We initialize it as a null value, but we have a method to set this later.
 primitiveFn - stores built-in behavior; evaluate copies the object and executes the function (i.e., add, inc, etc.) on that copy, returning the function’s result.
 
-# Methods
+# Methods:
 ## Set and Boolean Check For Primitive Values
 These first four methods are simply setters/boolean checkers for the aforementioned primitiveValue and primitiveFn fields. These come in handy for the evaluate() method. In Java, primitive values are not considered objects themselves, and thus need to be wrapped in an object class (i.e., int 5 --> Integer 5).
 
@@ -34,7 +34,10 @@ These first four methods are simply setters/boolean checkers for the aforementio
         public void setPrimitiveFunction(java.util.function.Function<AnObject,Object> f) { this.primitiveFn = f; }
         public boolean isPrimitiveValue()    { return primitiveValue != null; }
         public boolean isPrimitiveFunction() { return primitiveFn != null; }
-       
+
+## evaluate
+We want to be able to evaluate our objects, and this method does exactly that. We take in an object as a parameter and run checks on it first. If the object is a primitive function, then we create a new copy of the object and return the copy with the function applied to it. If the object is a primitive value, we just copy it and return the copy. If there are no messages attached to the object, there's nothing to evaluate, and so we return the object without copying it. Finally, if these conditions are not met, then we just copy the object and its messages, create a new dummy object (result), send the messages to our dummy object in chronological order, and then finally return the dummy object. The reason for this convolution is to avoid having to mutate our original object.
+
         public Object evaluate(AnObject obj) {
                 if (obj.isPrimitiveFunction()) {
                 AnObject c = copy(obj);
