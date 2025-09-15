@@ -156,27 +156,6 @@ Returns the object as a string representation using an overridden toString() met
             }
     
 ## toString
-This will be how we build the string representation of any object: Header -> slots (if any) -> messages (if any)
- ### Header: 
-        sb.append("Object@").append(System.identityHashCode(this)).append(" {");
-        - Shows the object id as "Object@<some number>" 
-        - System.identityHashCode(this) is the identity hash and not the memory address of the object
-
-### slots: 
-
-            if (!slots.isEmpty()) {
-                sb.append("\n  slots:");
-                for (Map.Entry<String, AnObject> e : slots.entrySet()) {
-                    String name = e.getKey();
-                    AnObject ref = e.getValue();
-                    boolean isParent = parents.contains(name);
-                    sb.append("\n    ").append(isParent ? "^" : "").append(name)
-                      .append(" -> Object@").append(System.identityHashCode(ref));
-                }
-            }
-
-
-        
             @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
@@ -200,3 +179,33 @@ This will be how we build the string representation of any object: Header -> slo
         }
         
         }
+        
+This will be how we build the string representation of any object: Header -> slots (if any) -> messages (if any)
+ ### Header: 
+        sb.append("Object@").append(System.identityHashCode(this)).append(" {");
+        - Shows the object id as "Object@<some number>" 
+        - System.identityHashCode(this) is the identity hash and not the memory address of the object
+
+### slots: 
+
+            if (!slots.isEmpty()) {
+                sb.append("\n  slots:");
+                for (Map.Entry<String, AnObject> e : slots.entrySet()) {
+                    String name = e.getKey();
+                    AnObject ref = e.getValue();
+                    boolean isParent = parents.contains(name);
+                    sb.append("\n    ").append(isParent ? "^" : "").append(name)
+                      .append(" -> Object@").append(System.identityHashCode(ref));
+                }
+            }
+            - prints a leading ^ if the slot is marked as a parent
+            - prints the slot name
+            - prints -> Object@<id> where <id> is the identity hash of the referenced object
+
+### messages:
+        if (!messages.isEmpty()) {
+                sb.append("\n  messages: ").append(messages);
+            }
+        - prints the list of messages in chronological order
+
+
